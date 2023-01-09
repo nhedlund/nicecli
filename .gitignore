@@ -6,5 +6,6 @@ TestResults
 *.trx
 *.DotSettings.user
 
+.idea
 .DS_Store
 coverage.json
