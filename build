@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Version
+dotnet tool restore
+VERSION=$(dotnet minver -v e -d src)
+if [[ -v GITHUB_ENV ]]; then
+  echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+fi
+echo
+echo "Version: $VERSION"
+echo
+
+# Build
+pushd src > /dev/null || exit
+dotnet restore
+dotnet build --no-restore --configuration Release
+
+popd > /dev/null || exit
