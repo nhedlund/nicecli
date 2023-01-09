@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo "Version: $VERSION"
+dotnet test --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=tests.trx" --logger "console;verbosity=detailed" src/NiceCli.sln
