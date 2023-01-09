@@ -1,0 +1,10 @@
+bin
+obj
+TestResults
+
+*.log
+*.trx
+*.DotSettings.user
+
+.DS_Store
+coverage.json
