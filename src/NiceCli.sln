@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceCli", "NiceCli\NiceCli.csproj", "{F57B56B7-9338-4CFA-B7A2-25FC8A84EE85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceCli.Dotnet", "NiceCli.Dotnet\NiceCli.Dotnet.csproj", "{2EFEA42C-5A89-4B93-BA8B-D406CC2C9F5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceCli.Tests", "NiceCli.Tests\NiceCli.Tests.csproj", "{552A7CF3-AF3A-4E43-B49F-691931633558}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceCli.Tests.Dotnet.TestApp", "NiceCli.Tests.Dotnet.TestApp\NiceCli.Tests.Dotnet.TestApp.csproj", "{2DC72517-AF10-443F-96BA-D5D58B4CABBB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{EA05878B-3849-4E1A-99E5-B8D9BC486D8E}"
+	ProjectSection(SolutionItems) = preProject
+		..\build = ..\build
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		..\runtests = ..\runtests
+		Directory.Build.props = Directory.Build.props
+		..\.config\dotnet-tools.json = ..\.config\dotnet-tools.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F57B56B7-9338-4CFA-B7A2-25FC8A84EE85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F57B56B7-9338-4CFA-B7A2-25FC8A84EE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F57B56B7-9338-4CFA-B7A2-25FC8A84EE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F57B56B7-9338-4CFA-B7A2-25FC8A84EE85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EFEA42C-5A89-4B93-BA8B-D406CC2C9F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EFEA42C-5A89-4B93-BA8B-D406CC2C9F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EFEA42C-5A89-4B93-BA8B-D406CC2C9F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EFEA42C-5A89-4B93-BA8B-D406CC2C9F5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{552A7CF3-AF3A-4E43-B49F-691931633558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{552A7CF3-AF3A-4E43-B49F-691931633558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{552A7CF3-AF3A-4E43-B49F-691931633558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{552A7CF3-AF3A-4E43-B49F-691931633558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC72517-AF10-443F-96BA-D5D58B4CABBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC72517-AF10-443F-96BA-D5D58B4CABBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC72517-AF10-443F-96BA-D5D58B4CABBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC72517-AF10-443F-96BA-D5D58B4CABBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
