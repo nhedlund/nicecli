@@ -13,7 +13,11 @@ internal class CliVersionCommand : ICliVersionCommand, ICliBuiltInCommand
 
   public Task ExecuteAsync()
   {
-    Console.Write(_definition.AppVersion);
+    if (Console.IsOutputRedirected)
+      Console.Write(_definition.AppVersion);
+    else
+      Console.WriteLine(_definition.AppVersion);
+
     return Task.CompletedTask;
   }
 }
