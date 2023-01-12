@@ -9,18 +9,16 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
   private const int MinimumColumnMargin = 2;
   private readonly CliDefinition _definition;
   private readonly CliCommandDefinition? _selectedCommand;
-  private readonly ConsoleColor _defaultColor;
   private readonly CliCommandDefinition? _defaultCommand;
   private readonly int _maxParameterWidth;
-  private readonly bool _useColors;
+  private readonly bool _useAnsiCodes;
   private readonly bool _hasHiddenCommands;
 
   public CliHelpCommand(CliDefinition definition, CliSelectedCommand selectedCommand)
   {
     _definition = definition ?? throw new ArgumentNullException(nameof(definition));
     _selectedCommand = selectedCommand.SelectedCommandToShowHelpFor;
-    _useColors = !Console.IsOutputRedirected;
-    _defaultColor = _useColors ? Console.ForegroundColor : ConsoleColor.Gray;
+    _useAnsiCodes = !Console.IsOutputRedirected;
     _defaultCommand = _definition.Commands.SingleOrDefault(command => command.DefaultCommand == CliDefault.Yes);
     _hasHiddenCommands = _definition.Commands.Any(command => command.Visibility == CliVisibility.Hidden);
     _maxParameterWidth = _selectedCommand != null ?
@@ -137,13 +135,12 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
 
   private void WriteHeader(string header)
   {
-    if (_useColors)
-      Console.ForegroundColor = ConsoleColor.White;
+    header = header.ToUpperInvariant();
 
-    Console.WriteLine(header.ToUpperInvariant());
+    if (_useAnsiCodes)
+      header = Ansi.Bold(header);
 
-    if (_useColors)
-      Console.ForegroundColor = _defaultColor;
+    Console.WriteLine(header);
   }
 
   private static void WriteIndentedLine(string row = "")
