@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  Build:
+  strategy:
+    matrix:
+      os: [macos-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    fail-fast: false
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0      
+
+    - name: Setup
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Build
+      run: ./build
+      shell: bash
+
+    - name: Test
+      run: ./runtests
+      shell: bash
+
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Test Results
+        path: '**/*.trx'
+        reporter: dotnet-trx
