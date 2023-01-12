@@ -1,4 +1,5 @@
 # NiceCli
+[![CI](https://github.com/nhedlund/nicecli/actions/workflows/ci.yml/badge.svg)](https://github.com/nhedlund/nicecli/actions/workflows/ci.yml)
 
 NiceCli is a command-based framework for .NET CLI applications.
 
