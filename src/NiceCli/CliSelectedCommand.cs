@@ -23,7 +23,7 @@ public class CliSelectedCommand
     _selectedCommand = selectedFromArgs;
 
     SetVersionCommandIfVersionFlagIsPresent();
-    SetHelpForCommandIfHelpFlagIsPresent();
+    SetHelpForCommandOrGeneralHelpIfHelpFlagIsPresent();
     SetDefaultCommandAsSelectedIfAvailableAndNoCommandIsSet();
     SetHelpIfNoSelectedCommand();
   }
@@ -34,9 +34,9 @@ public class CliSelectedCommand
       _selectedCommand = _commands.TryGetCommandDefinitionImplementing<ICliVersionCommand>();
   }
 
-  private void SetHelpForCommandIfHelpFlagIsPresent()
+  private void SetHelpForCommandOrGeneralHelpIfHelpFlagIsPresent()
   {
-    if (_selectedCommand != null && _globalOptions.IsHelpRequested)
+    if (_globalOptions.IsHelpRequested)
     {
       SelectedCommandToShowHelpFor = _selectedCommand;
       _selectedCommand = _commands.TryGetCommandDefinitionImplementing<ICliHelpCommand>();

@@ -9,13 +9,25 @@ public class GlobalFlagArgsTests
   [TestCase("-h")]
   [TestCase("--help")]
   [TestCase("--Help")]
-  public async Task HelpWithDefaultGlobalConfigurationAndNoSelectedCommand_HelpIsSetAndRunReturns0(string arg)
+  public async Task HelpWithNoSelectedCommand_HelpIsSetAndRunReturns0(string arg)
   {
     var app = CliApp.WithArgs(arg)
       .Command<MyOtherCommand>("Run other command")
       .Parse();
 
-    app.Definition.Options.GlobalOptions.ShouldNotBeNull();
+    app.Definition.Options.IsHelpRequested.ShouldBeTrue();
+    app.SelectedCommand.ShouldNotBeNull();
+    app.SelectedCommand.CommandType.ShouldBe(typeof(CliHelpCommand));
+    (await app.RunAsync()).ShouldBe(0);
+  }
+
+  [Test]
+  public async Task HelpWithDefaultSelectedCommand_HelpIsSetAndRunReturns0()
+  {
+    var app = CliApp.WithArgs("-h")
+      .DefaultCommand<MyDefaultRunCommand>("Default run")
+      .Parse();
+
     app.Definition.Options.IsHelpRequested.ShouldBeTrue();
     app.SelectedCommand.ShouldNotBeNull();
     app.SelectedCommand.CommandType.ShouldBe(typeof(CliHelpCommand));
@@ -26,7 +38,7 @@ public class GlobalFlagArgsTests
   [TestCase("-v")]
   [TestCase("--version")]
   [TestCase("--Version")]
-  public async Task VersionWithDefaultGlobalConfigurationAndNoSelectedCommand_VersionIsSetAndRunReturns0(string arg)
+  public async Task VersionWithNoSelectedCommand_VersionIsSetAndRunReturns0(string arg)
   {
     var app = CliApp.WithArgs(arg)
       .Command<MyOtherCommand>("Run other command")
