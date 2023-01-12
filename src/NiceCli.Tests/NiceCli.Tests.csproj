@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NiceCli.Dotnet\NiceCli.Dotnet.csproj"/>
-    <ProjectReference Include="..\NiceCli.Tests.Dotnet.TestApp\NiceCli.Tests.Dotnet.TestApp.csproj"/>
     <ProjectReference Include="..\NiceCli\NiceCli.csproj"/>
+    <ProjectReference Include="..\NiceCli.Dotnet\NiceCli.Dotnet.csproj"/>
+    <ProjectReference Include="..\NiceCli.Examples.DotnetRunHost\NiceCli.Examples.DotnetRunHost.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
