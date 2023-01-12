@@ -13,6 +13,7 @@ public class CliCommands : IReadOnlyList<CliCommandDefinition>
   }
 
   public int Count => _commands.Count;
+  public bool HasDefaultCommand => _commands.Any(command => command.DefaultCommand == CliDefault.Yes);
   public CliCommandDefinition this[int index] => _commands[index];
 
   public void AddDefaultCommandsIfNotDefined()

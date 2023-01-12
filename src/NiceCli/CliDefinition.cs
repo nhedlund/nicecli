@@ -9,7 +9,7 @@ public class CliDefinition
 
   internal string Name { get; set; } = Assembly.GetEntryAssembly()?.GetName().Name ?? "";
   internal string Description { get; set; } = "";
-  internal string Usage { get; set; } = "<command> [args]";
+  internal string Usage => $"{(Commands.HasDefaultCommand ? "[command]" : "<command>")} [args]";
   internal string AppVersion { get; set; } = Assembly.GetEntryAssembly()?
     .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "";
   internal List<string> Examples { get; } = new();

@@ -23,15 +23,6 @@ public static class CliAppExtensions
     return app;
   }
 
-  public static CliApp Usage(this CliApp app, string usage)
-  {
-    if (string.IsNullOrWhiteSpace(usage))
-      throw new ArgumentException($"{nameof(usage)} is null or empty.");
-
-    app.Definition.Usage = usage;
-    return app;
-  }
-
   public static CliApp Version(this CliApp app, string version)
   {
     if (string.IsNullOrWhiteSpace(version))
