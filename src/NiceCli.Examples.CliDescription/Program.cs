@@ -1,5 +1,7 @@
 ﻿using NiceCli;
 
+// CLI app with overridden name and version, and description, examples and learn more info.
+
 return await CliApp.WithArgs(args)
   .Named("custom-name")
   .Description("This app only serves as an example really")
