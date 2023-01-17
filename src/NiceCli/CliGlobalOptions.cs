@@ -18,6 +18,7 @@ public class CliGlobalOptions
 
   internal List<CliParameter> Parameters { get; }
   internal object GlobalOptions { get; }
+  internal Action<object> OnConfigured { get; set; } = _ => { };
 
   internal IEnumerable<CliOption> Options => Parameters.OfType<CliOption>();
   internal IEnumerable<CliFlag> Flags => Parameters.OfType<CliFlag>();

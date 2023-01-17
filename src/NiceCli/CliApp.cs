@@ -7,6 +7,7 @@ public class CliApp
 {
   private readonly string[] _args;
   private Func<Task<int>>? _hostRun;
+  private bool _parsed;
 
   private CliApp(params string[] args)
   {
@@ -22,11 +23,16 @@ public class CliApp
     return new CliApp(args);
   }
 
-  internal CliApp Parse()
+  public CliApp Parse()
   {
+    if (_parsed)
+      return this;
+
     SelectedCommand = Definition.Parse(_args);
     Definition.RegisterInternalDependencies(Container);
     Container.AddSingleton(typeof(CliSelectedCommand), SelectedCommand);
+    Definition.Options.OnConfigured(Definition.Options.GlobalOptions);
+    _parsed = true;
     return this;
   }
 
