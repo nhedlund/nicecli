@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Linq.Expressions;
 using NiceCli.Core;
 
@@ -44,6 +43,15 @@ public static class CliCommandExtensions
 
   public static CliCommandDefinition<TCommand> PositionalParameter<TCommand>(
     this CliCommandDefinition<TCommand> command,
+    Expression<Func<TCommand, double>> property,
+    string description,
+    CliOptionality optionality = CliOptionality.Mandatory) where TCommand : ICliCommand
+  {
+    return command.PositionalParameter(property, optionality, description, CliValueConversion.ToDouble);
+  }
+
+  public static CliCommandDefinition<TCommand> PositionalParameter<TCommand>(
+    this CliCommandDefinition<TCommand> command,
     Expression<Func<TCommand, decimal>> property,
     string description,
     CliOptionality optionality = CliOptionality.Mandatory) where TCommand : ICliCommand
@@ -85,7 +93,7 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Visible, description, parameter, value => value, shortName);
+    return command.Option(property, description, parameter, value => value, shortName);
   }
 
   public static CliCommandDefinition<TCommand> HiddenOption<TCommand>(
@@ -95,7 +103,7 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Hidden, description, parameter, value => value, shortName);
+    return command.HiddenOption(property, description, parameter, value => value, shortName);
   }
 
   public static CliCommandDefinition<TCommand> Option<TCommand>(
@@ -105,7 +113,7 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Visible, description, parameter, value => long.Parse(value, CultureInfo.InvariantCulture), shortName);
+    return command.Option(property, description, parameter, CliValueConversion.ToLong, shortName);
   }
 
   public static CliCommandDefinition<TCommand> HiddenOption<TCommand>(
@@ -115,7 +123,27 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Hidden, description, parameter, value => long.Parse(value, CultureInfo.InvariantCulture), shortName);
+    return command.HiddenOption(property, description, parameter, CliValueConversion.ToLong, shortName);
+  }
+
+  public static CliCommandDefinition<TCommand> Option<TCommand>(
+    this CliCommandDefinition<TCommand> command,
+    Expression<Func<TCommand, double>> property,
+    string description,
+    string parameter,
+    char shortName = ' ') where TCommand : ICliCommand
+  {
+    return command.Option(property, description, parameter, CliValueConversion.ToDouble, shortName);
+  }
+
+  public static CliCommandDefinition<TCommand> HiddenOption<TCommand>(
+    this CliCommandDefinition<TCommand> command,
+    Expression<Func<TCommand, double>> property,
+    string description,
+    string parameter,
+    char shortName = ' ') where TCommand : ICliCommand
+  {
+    return command.HiddenOption(property, description, parameter, CliValueConversion.ToDouble, shortName);
   }
 
   public static CliCommandDefinition<TCommand> Option<TCommand>(
@@ -125,7 +153,7 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Visible, description, parameter, value => decimal.Parse(value, CultureInfo.InvariantCulture), shortName);
+    return command.Option(property, description, parameter, CliValueConversion.ToDecimal, shortName);
   }
 
   public static CliCommandDefinition<TCommand> HiddenOption<TCommand>(
@@ -135,7 +163,7 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Hidden, description, parameter, value => decimal.Parse(value, CultureInfo.InvariantCulture), shortName);
+    return command.HiddenOption(property, description, parameter, CliValueConversion.ToDecimal, shortName);
   }
 
   public static CliCommandDefinition<TCommand> Option<TCommand>(
@@ -145,7 +173,7 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Visible, description, parameter, DateTime.Parse, shortName);
+    return command.Option(property, description, parameter, CliValueConversion.ToDateTime, shortName);
   }
 
   public static CliCommandDefinition<TCommand> HiddenOption<TCommand>(
@@ -155,7 +183,7 @@ public static class CliCommandExtensions
     string parameter,
     char shortName = ' ') where TCommand : ICliCommand
   {
-    return command.Option(property, CliVisibility.Hidden, description, parameter, DateTime.Parse, shortName);
+    return command.HiddenOption(property, description, parameter, CliValueConversion.ToDateTime, shortName);
   }
 
   private static CliCommandDefinition<TCommand> Flag<TCommand>(
@@ -177,6 +205,28 @@ public static class CliCommandExtensions
 
     command.Parameters.Add(flag);
     return command;
+  }
+
+  public static CliCommandDefinition<TCommand> Option<TCommand, TValue>(
+    this CliCommandDefinition<TCommand> command,
+    Expression<Func<TCommand, TValue>> property,
+    string description,
+    string parameter,
+    Func<string, TValue> parseValue,
+    char shortName = ' ') where TCommand : ICliCommand
+  {
+    return command.Option(property, CliVisibility.Visible, description, parameter, parseValue, shortName);
+  }
+
+  public static CliCommandDefinition<TCommand> HiddenOption<TCommand, TValue>(
+    this CliCommandDefinition<TCommand> command,
+    Expression<Func<TCommand, TValue>> property,
+    string description,
+    string parameter,
+    Func<string, TValue> parseValue,
+    char shortName = ' ') where TCommand : ICliCommand
+  {
+    return command.Option(property, CliVisibility.Hidden, description, parameter, parseValue, shortName);
   }
 
   private static CliCommandDefinition<TCommand> Option<TCommand, TValue>(
@@ -203,7 +253,7 @@ public static class CliCommandExtensions
     return command;
   }
 
-  private static CliCommandDefinition<TCommand> PositionalParameter<TCommand, TValue>(
+  public static CliCommandDefinition<TCommand> PositionalParameter<TCommand, TValue>(
     this CliCommandDefinition<TCommand> command,
     Expression<Func<TCommand, TValue>> property,
     CliOptionality optionality,

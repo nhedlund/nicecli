@@ -27,10 +27,10 @@ public static class CliGlobalOptionsDefinitionExtensions
     this CliGlobalOptions<TGlobalOptions> app,
     Expression<Func<TGlobalOptions, string>> property,
     string description,
-    string parameter,
+    string parameter = "value",
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Visible, description, parameter, value => value, shortName);
+    return app.Option(property, description, parameter, value => value, shortName);
   }
 
   public static CliGlobalOptions<TGlobalOptions> HiddenOption<TGlobalOptions>(
@@ -40,7 +40,7 @@ public static class CliGlobalOptionsDefinitionExtensions
     string parameter,
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Hidden, description, parameter, value => value, shortName);
+    return app.HiddenOption(property, description, parameter, value => value, shortName);
   }
 
   public static CliGlobalOptions<TGlobalOptions> Option<TGlobalOptions>(
@@ -50,7 +50,7 @@ public static class CliGlobalOptionsDefinitionExtensions
     string parameter,
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Visible, description, parameter, CliValueConversion.ToLong, shortName);
+    return app.Option(property, description, parameter, CliValueConversion.ToLong, shortName);
   }
 
   public static CliGlobalOptions<TGlobalOptions> HiddenOption<TGlobalOptions>(
@@ -60,7 +60,27 @@ public static class CliGlobalOptionsDefinitionExtensions
     string parameter,
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Hidden, description, parameter, CliValueConversion.ToLong, shortName);
+    return app.HiddenOption(property, description, parameter, CliValueConversion.ToLong, shortName);
+  }
+
+  public static CliGlobalOptions<TGlobalOptions> Option<TGlobalOptions>(
+    this CliGlobalOptions<TGlobalOptions> app,
+    Expression<Func<TGlobalOptions, double>> property,
+    string description,
+    string parameter,
+    char shortName = ' ') where TGlobalOptions : class, new()
+  {
+    return app.Option(property, description, parameter, CliValueConversion.ToDouble, shortName);
+  }
+
+  public static CliGlobalOptions<TGlobalOptions> HiddenOption<TGlobalOptions>(
+    this CliGlobalOptions<TGlobalOptions> app,
+    Expression<Func<TGlobalOptions, double>> property,
+    string description,
+    string parameter,
+    char shortName = ' ') where TGlobalOptions : class, new()
+  {
+    return app.HiddenOption(property, description, parameter, CliValueConversion.ToDouble, shortName);
   }
 
   public static CliGlobalOptions<TGlobalOptions> Option<TGlobalOptions>(
@@ -70,7 +90,7 @@ public static class CliGlobalOptionsDefinitionExtensions
     string parameter,
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Visible, description, parameter, CliValueConversion.ToDecimal, shortName);
+    return app.Option(property, description, parameter, CliValueConversion.ToDecimal, shortName);
   }
 
   public static CliGlobalOptions<TGlobalOptions> HiddenOption<TGlobalOptions>(
@@ -80,7 +100,7 @@ public static class CliGlobalOptionsDefinitionExtensions
     string parameter,
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Hidden, description, parameter, CliValueConversion.ToDecimal, shortName);
+    return app.HiddenOption(property, description, parameter, CliValueConversion.ToDecimal, shortName);
   }
 
   public static CliGlobalOptions<TGlobalOptions> Option<TGlobalOptions>(
@@ -90,7 +110,7 @@ public static class CliGlobalOptionsDefinitionExtensions
     string parameter,
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Visible, description, parameter, CliValueConversion.ToDateTime, shortName);
+    return app.Option(property, description, parameter, CliValueConversion.ToDateTime, shortName);
   }
 
   public static CliGlobalOptions<TGlobalOptions> HiddenOption<TGlobalOptions>(
@@ -100,7 +120,15 @@ public static class CliGlobalOptionsDefinitionExtensions
     string parameter,
     char shortName = ' ') where TGlobalOptions : class, new()
   {
-    return app.Option(property, CliVisibility.Hidden, description, parameter, CliValueConversion.ToDateTime, shortName);
+    return app.HiddenOption(property, description, parameter, CliValueConversion.ToDateTime, shortName);
+  }
+
+  public static CliGlobalOptions<TGlobalOptions> Configure<TGlobalOptions>(
+    this CliGlobalOptions<TGlobalOptions> app,
+    Action<TGlobalOptions> configure) where TGlobalOptions : class, new()
+  {
+    app.OnConfigured = o => configure((TGlobalOptions) o);
+    return app;
   }
 
   private static CliGlobalOptions<TGlobalOptions> Flag<TGlobalOptions>(
@@ -122,6 +150,28 @@ public static class CliGlobalOptionsDefinitionExtensions
 
     app.Parameters.Add(flag);
     return app;
+  }
+
+  public static CliGlobalOptions<TGlobalOptions> Option<TGlobalOptions, TValue>(
+    this CliGlobalOptions<TGlobalOptions> app,
+    Expression<Func<TGlobalOptions, TValue>> property,
+    string description,
+    string parameter,
+    Func<string, TValue> parseValue,
+    char shortName = ' ') where TGlobalOptions : class, new()
+  {
+    return app.Option(property, CliVisibility.Visible, description, parameter, parseValue, shortName);
+  }
+
+  public static CliGlobalOptions<TGlobalOptions> HiddenOption<TGlobalOptions, TValue>(
+    this CliGlobalOptions<TGlobalOptions> app,
+    Expression<Func<TGlobalOptions, TValue>> property,
+    string description,
+    string parameter,
+    Func<string, TValue> parseValue,
+    char shortName = ' ') where TGlobalOptions : class, new()
+  {
+    return app.Option(property, CliVisibility.Hidden, description, parameter, parseValue, shortName);
   }
 
   private static CliGlobalOptions<TGlobalOptions> Option<TGlobalOptions, TValue>(
