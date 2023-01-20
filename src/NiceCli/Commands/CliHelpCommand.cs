@@ -5,6 +5,7 @@ namespace NiceCli.Commands;
 internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
 {
   internal const string ParameterNameSeparator = ", ";
+  private const int MaxParameterWidthLimit = 40;
   private const string Indent = "  ";
   private const int MinimumColumnMargin = 2;
   private readonly CliDefinition _definition;
@@ -21,9 +22,7 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
     _useAnsiCodes = !Console.IsOutputRedirected;
     _defaultCommand = _definition.Commands.SingleOrDefault(command => command.DefaultCommand == CliDefault.Yes);
     _hasHiddenCommands = _definition.Commands.Any(command => command.Visibility == CliVisibility.Hidden);
-    _maxParameterWidth = _selectedCommand != null ?
-      _selectedCommand.Parameters.GetMaxWidth() :
-      definition.Options.Parameters.GetMaxWidth();
+    _maxParameterWidth = GetMaxParameterWidth(definition);
   }
 
   public Task ExecuteAsync()
@@ -34,6 +33,15 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
       ShowCommandUsage(_selectedCommand);
 
     return Task.CompletedTask;
+  }
+
+  private int GetMaxParameterWidth(CliDefinition definition)
+  {
+    var maxWidth = _selectedCommand != null ?
+      _selectedCommand.Parameters.GetMaxWidth() :
+      definition.Options.Parameters.GetMaxWidth();
+
+    return Math.Min(maxWidth, MaxParameterWidthLimit);
   }
 
   private void ShowGeneralUsage()
@@ -76,7 +84,7 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
   private void WriteDefaultCommand()
   {
     if (_defaultCommand != null)
-      WriteSection("Default Command", GetParameterNamesAndDescription(_defaultCommand));
+      WriteSection("Default Command", GetParameterDescription(_defaultCommand));
   }
 
   private void WriteNonDefaultCommands()
@@ -86,19 +94,19 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
       command.DefaultCommand == CliDefault.No &&
       command.Visibility == CliVisibility.Visible).ToList();
 
-    WriteSection(_hasHiddenCommands ? "Common Commands" : "Commands", commands.Select(GetParameterNamesAndDescription).ToArray());
+    WriteSection(_hasHiddenCommands ? "Common Commands" : "Commands", commands.Select(GetParameterDescription).ToArray());
   }
 
   private void WriteOptions()
   {
     var options = _definition.Options.Options.Where(option => option.Visibility == CliVisibility.Visible).ToList();
-    WriteSection("Options", options.Select(GetParameterNamesAndDescription).ToArray());
+    WriteSection("Options", options.Select(GetParameterDescription).ToArray());
   }
 
   private void WriteFlags()
   {
     var flags = _definition.Options.Flags.Where(option => option.Visibility == CliVisibility.Visible).ToList();
-    WriteSection("Flags", flags.Select(GetParameterNamesAndDescription).ToArray());
+    WriteSection("Flags", flags.Select(GetParameterDescription).ToArray());
   }
 
   private void WriteExamples()
@@ -111,11 +119,13 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
     WriteSection("Learn More", _definition.LearnMore.ToArray());
   }
 
-  private string GetParameterNamesAndDescription(CliParameter parameter)
+  private string GetParameterDescription(CliParameter parameter)
   {
     var names = string.Join(ParameterNameSeparator, parameter.MatchingNames);
+    var namesWithOptionalValue = parameter is CliOption option ? $"{names} {option.Parameter}" : names;
     var namesTotalWidth = _maxParameterWidth + MinimumColumnMargin;
-    return $"{names.PadRight(namesTotalWidth)}{parameter.Description}";
+
+    return $"{namesWithOptionalValue.PadRight(namesTotalWidth)}{parameter.Description}";
   }
 
   private void WriteSection(string header, params string[] rows)

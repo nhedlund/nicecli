@@ -15,4 +15,6 @@ internal class CliOption : CliParameter
   public string Parameter { get; }
   protected override Action<object, string>? ParseParameter => null;
   protected override Action<object, string>? ParseParameterValue { get; }
+
+  internal override int DefinitionWidth => base.DefinitionWidth + 1 + Parameter.Length;
 }

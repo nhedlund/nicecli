@@ -1,3 +1,5 @@
+using NiceCli.Commands;
+
 namespace NiceCli.Core;
 
 public abstract class CliParameter
@@ -70,6 +72,13 @@ public abstract class CliParameter
   /// For flags this is either null (no flag), or <see cref="bool.TrueString"/>.
   /// </summary>
   internal string? Value { get; set; }
+
+  /// <summary>
+  /// Width of parameter definition: Names and optional value parameter.
+  /// </summary>
+  internal virtual int DefinitionWidth =>
+    MatchingNames.Sum(name => name.Length) +
+    (MatchingNames.Count - 1) * CliHelpCommand.ParameterNameSeparator.Length;
 
   /// <summary>
   /// Map value (if set) to bound object.

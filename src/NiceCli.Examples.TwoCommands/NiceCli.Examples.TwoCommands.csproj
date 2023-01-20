@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NiceCli\NiceCli.csproj"/>
+    <ProjectReference Include="..\NiceCli\NiceCli.csproj" />
   </ItemGroup>
 
 </Project>

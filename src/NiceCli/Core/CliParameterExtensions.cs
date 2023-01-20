@@ -1,5 +1,3 @@
-using NiceCli.Commands;
-
 namespace NiceCli.Core;
 
 internal static class CliParameterExtensions
@@ -26,18 +24,12 @@ internal static class CliParameterExtensions
 
     foreach (var parameter in parameters)
     {
-      var width = parameter.GetParameterWidth();
+      var width = parameter.DefinitionWidth;
 
       if (width > maxWidth)
         maxWidth = width;
     }
 
     return maxWidth;
-  }
-
-  private static int GetParameterWidth(this CliParameter parameter)
-  {
-    return parameter.MatchingNames.Sum(name => name.Length) +
-           (parameter.MatchingNames.Count - 1) * CliHelpCommand.ParameterNameSeparator.Length;
   }
 }
