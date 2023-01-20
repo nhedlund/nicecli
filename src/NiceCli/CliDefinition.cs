@@ -43,7 +43,14 @@ public class CliDefinition
   internal void RegisterInternalDependencies(CliInternalContainer container)
   {
     container.AddSingleton(typeof(CliDefinition), this);
-    container.AddSingleton(Options.GlobalOptions.GetType(), Options.GlobalOptions);
+
+    var globalOptionsType = Options.GlobalOptions.GetType();
+    container.AddSingleton(globalOptionsType, Options.GlobalOptions);
+
+    var globalOptionsInterfaces = globalOptionsType.GetInterfaces()
+      .Where(type => type.Namespace != null && !type.Namespace.StartsWith("System."));
+    globalOptionsInterfaces.ForEach(type => container.AddSingleton(type, Options.GlobalOptions));
+
     Commands.ForEach(command => container.AddCommand(command.CommandType));
   }
 }
