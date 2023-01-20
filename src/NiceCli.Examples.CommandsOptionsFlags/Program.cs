@@ -1,7 +1,7 @@
 ﻿using NiceCli;
 using NiceCli.Core;
-using NiceCli.Examples.TwoCommands;
-using NiceCli.Examples.TwoCommands.Commands;
+using NiceCli.Examples.CommandsOptionsFlags;
+using NiceCli.Examples.CommandsOptionsFlags.Commands;
 
 // CLI app with some global options, one default command (that runs if no command is used) and a second non-default command.
 
@@ -18,5 +18,5 @@ return await CliApp.WithArgs(args)
 static void InitializeLogging(ILoggingOptions loggingOptions)
 {
   if (loggingOptions.Verbose)
-    Console.WriteLine($"Using verbose logging");
+    Console.WriteLine("Using verbose logging");
 }

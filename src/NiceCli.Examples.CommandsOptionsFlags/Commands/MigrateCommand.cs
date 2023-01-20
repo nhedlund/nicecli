@@ -1,4 +1,4 @@
-namespace NiceCli.Examples.TwoCommands.Commands;
+namespace NiceCli.Examples.CommandsOptionsFlags.Commands;
 
 public class MigrateCommand : ICliCommand
 {

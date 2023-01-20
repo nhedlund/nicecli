@@ -1,4 +1,4 @@
-namespace NiceCli.Examples.TwoCommands;
+namespace NiceCli.Examples.CommandsOptionsFlags;
 
 public interface IDatabaseOptions
 {
