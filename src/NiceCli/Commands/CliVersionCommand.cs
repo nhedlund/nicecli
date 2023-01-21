@@ -4,19 +4,19 @@ namespace NiceCli.Commands;
 
 internal class CliVersionCommand : ICliVersionCommand, ICliBuiltInCommand
 {
-  private readonly CliDefinition _definition;
+  private readonly CliAppDefinition _appDefinition;
 
-  public CliVersionCommand(CliDefinition definition)
+  public CliVersionCommand(CliAppDefinition appDefinition)
   {
-    _definition = definition;
+    _appDefinition = appDefinition;
   }
 
   public Task ExecuteAsync()
   {
     if (Console.IsOutputRedirected)
-      Console.Write(_definition.AppVersion);
+      Console.Write(_appDefinition.AppVersion);
     else
-      Console.WriteLine(_definition.AppVersion);
+      Console.WriteLine(_appDefinition.AppVersion);
 
     return Task.CompletedTask;
   }

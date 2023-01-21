@@ -8,21 +8,21 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
   private const int MaxParameterWidthLimit = 40;
   private const string Indent = "  ";
   private const int MinimumColumnMargin = 2;
-  private readonly CliDefinition _definition;
+  private readonly CliAppDefinition _appDefinition;
   private readonly CliCommandDefinition? _selectedCommand;
   private readonly CliCommandDefinition? _defaultCommand;
   private readonly int _maxParameterWidth;
   private readonly bool _useAnsiCodes;
   private readonly bool _hasHiddenCommands;
 
-  public CliHelpCommand(CliDefinition definition, CliSelectedCommand selectedCommand)
+  public CliHelpCommand(CliAppDefinition appDefinition, CliSelectedCommand selectedCommand)
   {
-    _definition = definition ?? throw new ArgumentNullException(nameof(definition));
+    _appDefinition = appDefinition ?? throw new ArgumentNullException(nameof(appDefinition));
     _selectedCommand = selectedCommand.SelectedCommandToShowHelpFor;
     _useAnsiCodes = !Console.IsOutputRedirected;
-    _defaultCommand = _definition.Commands.SingleOrDefault(command => command.DefaultCommand == CliDefault.Yes);
-    _hasHiddenCommands = _definition.Commands.Any(command => command.Visibility == CliVisibility.Hidden);
-    _maxParameterWidth = GetMaxParameterWidth(definition);
+    _defaultCommand = _appDefinition.Commands.SingleOrDefault(command => command.DefaultCommand == CliDefault.Yes);
+    _hasHiddenCommands = _appDefinition.Commands.Any(command => command.Visibility == CliVisibility.Hidden);
+    _maxParameterWidth = GetMaxParameterWidth(appDefinition);
   }
 
   public Task ExecuteAsync()
@@ -35,31 +35,35 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
     return Task.CompletedTask;
   }
 
-  private int GetMaxParameterWidth(CliDefinition definition)
+  private int GetMaxParameterWidth(CliAppDefinition appDefinition)
   {
     var maxWidth = _selectedCommand != null ?
       _selectedCommand.Parameters.GetMaxWidth() :
-      definition.Options.Parameters.GetMaxWidth();
+      appDefinition.Options.Parameters.GetMaxWidth();
 
     return Math.Min(maxWidth, MaxParameterWidthLimit);
   }
 
   private void ShowGeneralUsage()
   {
-    WriteDescription(_definition.Description);
+    WriteDescription(_appDefinition.Description);
     WriteAppUsage();
     WriteDefaultCommand();
     WriteNonDefaultCommands();
-    WriteOptions();
-    WriteFlags();
-    WriteExamples();
-    WriteLearnMore();
+    WriteOptions(_appDefinition.Options.Options);
+    WriteFlags(_appDefinition.Options.Flags);
+    WriteExamples(_appDefinition.Examples);
+    WriteLearnMore(_appDefinition.LearnMores);
   }
 
   private void ShowCommandUsage(CliCommandDefinition commandDefinition)
   {
     WriteDescription(commandDefinition.Description);
     WriteCommandUsage(commandDefinition);
+    WriteOptions(commandDefinition.Options);
+    WriteFlags(commandDefinition.Flags);
+    WriteExamples(commandDefinition.Examples);
+    WriteLearnMore(commandDefinition.LearnMores);
   }
 
   private static void WriteDescription(string description)
@@ -73,12 +77,13 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
 
   private void WriteAppUsage()
   {
-    WriteSection("Usage", $"{_definition.Name} {_definition.Usage}");
+    WriteSection("Usage", $"{_appDefinition.Name} {_appDefinition.Usage}");
   }
 
   private void WriteCommandUsage(CliCommandDefinition commandDefinition)
   {
-    WriteSection("Usage", $"{_definition.Name} {commandDefinition.CommandMatchingName}");
+    var optionalArgs = commandDefinition.Parameters.Any() ? " [args]" : "";
+    WriteSection("Usage", $"{_appDefinition.Name} {commandDefinition.CommandMatchingName}{optionalArgs}");
   }
 
   private void WriteDefaultCommand()
@@ -89,7 +94,7 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
 
   private void WriteNonDefaultCommands()
   {
-    var commands = _definition.Commands.Where(command =>
+    var commands = _appDefinition.Commands.Where(command =>
       command != _defaultCommand &&
       command.DefaultCommand == CliDefault.No &&
       command.Visibility == CliVisibility.Visible).ToList();
@@ -97,26 +102,26 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
     WriteSection(_hasHiddenCommands ? "Common Commands" : "Commands", commands.Select(GetParameterDescription).ToArray());
   }
 
-  private void WriteOptions()
+  private void WriteOptions(IEnumerable<CliOption> options)
   {
-    var options = _definition.Options.Options.Where(option => option.Visibility == CliVisibility.Visible).ToList();
+    options = options.Where(option => option.Visibility == CliVisibility.Visible);
     WriteSection("Options", options.Select(GetParameterDescription).ToArray());
   }
 
-  private void WriteFlags()
+  private void WriteFlags(IEnumerable<CliFlag> flags)
   {
-    var flags = _definition.Options.Flags.Where(option => option.Visibility == CliVisibility.Visible).ToList();
+    flags = flags.Where(option => option.Visibility == CliVisibility.Visible);
     WriteSection("Flags", flags.Select(GetParameterDescription).ToArray());
   }
 
-  private void WriteExamples()
+  private void WriteExamples(IEnumerable<string> examples)
   {
-    WriteSection("Examples", _definition.Examples.ToArray());
+    WriteSection("Examples", examples.ToArray());
   }
 
-  private void WriteLearnMore()
+  private void WriteLearnMore(IEnumerable<string> learnMores)
   {
-    WriteSection("Learn More", _definition.LearnMore.ToArray());
+    WriteSection("Learn More", learnMores.ToArray());
   }
 
   private string GetParameterDescription(CliParameter parameter)

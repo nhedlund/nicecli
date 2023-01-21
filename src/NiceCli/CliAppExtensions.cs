@@ -59,7 +59,7 @@ public static class CliAppExtensions
     if (string.IsNullOrWhiteSpace(learnMore))
       throw new ArgumentException($"{nameof(learnMore)} is null or empty.");
 
-    app.Definition.LearnMore.Add(learnMore);
+    app.Definition.LearnMores.Add(learnMore);
     return app;
   }
 

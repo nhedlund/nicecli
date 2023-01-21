@@ -9,7 +9,7 @@ public class CliDefinitionTests
   public void GlobalOptionsWithTwoInterfaces_RegisterInternalDependencies_RegistersTheClassAndTheTwoInterfacesInTheContainer()
   {
     var container = new CliInternalContainer();
-    var definition = new CliDefinition {Options = CliGlobalOptions.Create<MyGlobalOptions>()};
+    var definition = new CliAppDefinition {Options = CliGlobalOptions.Create<MyGlobalOptions>()};
     container.AddCommand(typeof(MyTestCommand));
 
     definition.RegisterInternalDependencies(container);

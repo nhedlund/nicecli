@@ -3,7 +3,7 @@ using NiceCli.Core;
 
 namespace NiceCli;
 
-public class CliDefinition
+public class CliAppDefinition
 {
   private CliSelectedCommand? _selectedCommand;
 
@@ -13,7 +13,7 @@ public class CliDefinition
   internal string AppVersion { get; set; } = Assembly.GetEntryAssembly()?
     .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "";
   internal List<string> Examples { get; } = new();
-  internal List<string> LearnMore { get; } = new();
+  internal List<string> LearnMores { get; } = new();
 
   internal CliCommands Commands { get; } = new();
   internal CliGlobalOptions Options { get; set; } = CliGlobalOptions.Create<object>();
@@ -42,7 +42,7 @@ public class CliDefinition
 
   internal void RegisterInternalDependencies(CliInternalContainer container)
   {
-    container.AddSingleton(typeof(CliDefinition), this);
+    container.AddSingleton(typeof(CliAppDefinition), this);
 
     var globalOptionsType = Options.GlobalOptions.GetType();
     container.AddSingleton(globalOptionsType, Options.GlobalOptions);

@@ -14,7 +14,7 @@ public class CliApp
     _args = args ?? throw new ArgumentNullException(nameof(args));
   }
 
-  internal CliDefinition Definition { get; } = new();
+  internal CliAppDefinition Definition { get; } = new();
   internal CliSelectedCommand? SelectedCommand { get; set; }
   internal CliInternalContainer Container { get; set; } = new();
 

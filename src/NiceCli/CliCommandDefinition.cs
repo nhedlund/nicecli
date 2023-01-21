@@ -28,6 +28,8 @@ public class CliCommandDefinition : CliParameter
   internal string CommandName => Name;
   internal string CommandMatchingName => MatchingNames.Single();
   internal IEnumerable<CliParameter> RequiredParameters => Parameters.Where(parameter => parameter.Optionality == CliOptionality.Mandatory);
+  internal IEnumerable<CliOption> Options => Parameters.OfType<CliOption>();
+  internal IEnumerable<CliFlag> Flags => Parameters.OfType<CliFlag>();
 
   protected override Action<object, string>? ParseParameter => null;
   protected override Action<object, string>? ParseParameterValue => null;
