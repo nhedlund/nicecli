@@ -1,6 +1,6 @@
 namespace NiceCli.Tests.TestDomain;
 
-public class MyDefaultRunCommand : ICliCommand, IMyCommand
+public class MyDefaultRunCommand : ICliCommand, IVerboseAndNumberCommand
 {
   public bool Verbose { get; set; }
   public int Number { get; set; }

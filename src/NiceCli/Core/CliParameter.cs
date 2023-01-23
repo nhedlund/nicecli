@@ -27,6 +27,7 @@ public abstract class CliParameter
       .ToList();
 
     Name = name;
+    ParameterNames = MatchingNames.Any() ? string.Join(CliHelpCommand.ParameterNameSeparator, MatchingNames) : name.PascalToKebabCase();
     Optionality = optionality;
     Visibility = visibility;
     Description = description;
@@ -43,13 +44,19 @@ public abstract class CliParameter
   internal string Name { get; }
 
   /// <summary>
+  /// CLI names comma-separated from MatchingNames.
+  /// If that is empty (positional parameter) then <see cref="Name"/> is used in kebab case.
+  /// </summary>
+  internal string ParameterNames { get; }
+
+  /// <summary>
   /// Parameter names that match this parameter to the CLI arguments, for example "start", "-v" or "--version".
   /// If empty this is a positional parameter, probably a required command parameter.
   /// </summary>
   internal IReadOnlyList<string> MatchingNames { get; }
 
   /// <summary>
-  /// Description of command, option or flag.
+  /// Description of command, parameter, option or flag.
   /// </summary>
   internal string Description { get; }
 
@@ -76,9 +83,7 @@ public abstract class CliParameter
   /// <summary>
   /// Width of parameter definition: Names and optional value parameter.
   /// </summary>
-  internal virtual int DefinitionWidth =>
-    MatchingNames.Sum(name => name.Length) +
-    (MatchingNames.Count - 1) * CliHelpCommand.ParameterNameSeparator.Length;
+  internal virtual int DefinitionWidth => ParameterNames.Length;
 
   /// <summary>
   /// Map value (if set) to bound object.

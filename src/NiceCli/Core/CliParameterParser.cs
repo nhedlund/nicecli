@@ -11,16 +11,17 @@ internal static class CliParameterParser
   /// </returns>
   public static CliCommandDefinition? ParseParameters(
     IEnumerable<string> args,
-    IEnumerable<CliParameter> globalParameters,
+    IReadOnlyList<CliParameter> globalParameters,
     IEnumerable<CliCommandDefinition> commands)
   {
     var unprocessedArgs = args.ToList();
 
     ParseGlobalParameters(globalParameters, unprocessedArgs);
+    var isHelpRequested = globalParameters.Any(parameter => parameter.IsHelpRequested());
     var selectedCommand = ParseOptionalSelectedCommand(commands, unprocessedArgs);
 
     if (selectedCommand != null)
-      ParseCommandParameters(selectedCommand);
+      ParseCommandParameters(selectedCommand, isHelpRequested);
 
     EnsureNoUnprocessedArgsRemain(unprocessedArgs);
     return selectedCommand;
@@ -33,8 +34,12 @@ internal static class CliParameterParser
 
   private static void ParseParameters(List<string> unprocessedArgs, IEnumerable<CliParameter> parameters)
   {
-    parameters.ForEach(parameter =>
-      ParseParameterIfFoundInUnprocessedArgs(unprocessedArgs, parameter));
+    var parameterList = parameters.ToList();
+    var positionalParameters = parameterList.Where(parameter => parameter is CliPositionalParameter);
+    var nonPositionalParameters = parameterList.Where(parameter => parameter is not CliPositionalParameter);
+
+    nonPositionalParameters.ForEach(parameter => ParseParameterIfFoundInUnprocessedArgs(unprocessedArgs, parameter));
+    positionalParameters.ForEach(parameter => ParseParameterIfFoundInUnprocessedArgs(unprocessedArgs, parameter));
   }
 
   private static CliCommandDefinition? ParseOptionalSelectedCommand(IEnumerable<CliCommandDefinition> commands, List<string> unprocessedArgs)
@@ -58,13 +63,13 @@ internal static class CliParameterParser
     return null;
   }
 
-  private static void ParseCommandParameters(CliCommandDefinition command)
+  private static void ParseCommandParameters(CliCommandDefinition command, bool isHelpRequested)
   {
     var argsCount = command.CommandArgs.Count;
     var requiredParameterCount = command.RequiredParameters.Sum(parameter => parameter.ParameterArgumentCount);
 
-    if (argsCount < requiredParameterCount)
-      throw new CliUserException($"Command {command.CommandName} requires {requiredParameterCount} arguments, but only {argsCount} arguments were used.");
+    if (argsCount < requiredParameterCount && !isHelpRequested)
+      throw new CliUserException($"Command {command.CommandName} requires {requiredParameterCount} arguments, but {argsCount} arguments were used.");
 
     var argsToPreValidate = command.CommandArgs.ToList();
     ParseParameters(argsToPreValidate, command.Parameters);
@@ -81,6 +86,16 @@ internal static class CliParameterParser
 
   private static bool ParseParameterIfFoundInUnprocessedArgs(List<string> unprocessedArgs, CliParameter parameter)
   {
+    if (parameter is CliPositionalParameter)
+    {
+      if (unprocessedArgs.Count == 0)
+        return false;
+
+      parameter.Value = unprocessedArgs[0];
+      unprocessedArgs.RemoveAt(0);
+      return true;
+    }
+
     for (var i = 0; i < unprocessedArgs.Count; i++)
     {
       var arg = unprocessedArgs[i];
@@ -90,7 +105,7 @@ internal static class CliParameterParser
         if (parameter.ParameterArgumentCount == 2)
         {
           if (i + 1 >= unprocessedArgs.Count)
-            throw new InvalidOperationException($"Option {arg} requires a second parameter, see help.");
+            throw new CliUserException($"Option {arg} requires a second parameter, see help.");
 
           var value = unprocessedArgs[i + 1];
           parameter.Value = value;

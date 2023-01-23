@@ -23,7 +23,7 @@ public class CliGlobalOptions
   internal IEnumerable<CliOption> Options => Parameters.OfType<CliOption>();
   internal IEnumerable<CliFlag> Flags => Parameters.OfType<CliFlag>();
 
-  internal bool IsHelpRequested => Flags.Any(flag => flag.Name == BuiltInFlags.HelpName && flag.HasValue());
+  internal bool IsHelpRequested => Flags.Any(flag => flag.IsHelpRequested());
   internal bool IsVersionRequested => Flags.Any(flag => flag.Name == BuiltInFlags.VersionName && flag.HasValue());
 
   public void AddGlobalParameterValueProvider(IGlobalParameterValueProvider globalParameterValueProvider)

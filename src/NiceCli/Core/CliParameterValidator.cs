@@ -13,6 +13,7 @@ internal static class CliParameterValidator
     ValidateDefaultCommandParameters(commands);
     ValidateThatExactlyOneCommandExistsOfType<ICliHelpCommand>(commands);
     ValidateThatExactlyOneCommandExistsOfType<ICliVersionCommand>(commands);
+    ValidatePositionalParameters(commands);
   }
 
   private static void ValidateAtLeastOneCommandExists(IEnumerable<CliCommandDefinition> commands)
@@ -64,5 +65,26 @@ internal static class CliParameterValidator
 
     if (defaultCommand != null && defaultCommand.Parameters.Any(parameter => parameter.Optionality == CliOptionality.Mandatory))
       throw new InvalidOperationException("Mandatory parameters is not allowed on a default command.");
+  }
+
+  private static void ValidatePositionalParameters(IReadOnlyList<CliCommandDefinition> commands)
+  {
+    foreach (var command in commands)
+    {
+      var required = true;
+
+      foreach (var parameter in command.Parameters.OfType<CliPositionalParameter>())
+      {
+        if (parameter.Optionality == CliOptionality.Optional)
+        {
+          required = false;
+        }
+        else
+        {
+          if (required == false)
+            throw new InvalidOperationException($"Command {command.Name} contains both required and non-required positional parameters in the wrong order. All required parameters must come before non-required.");
+        }
+      }
+    }
   }
 }

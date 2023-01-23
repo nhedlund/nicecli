@@ -13,6 +13,11 @@ internal static class CliParameterExtensions
       name.Equals(arg, IsShortName(arg) ? StringComparison.Ordinal: StringComparison.OrdinalIgnoreCase));
   }
 
+  internal static bool IsHelpRequested(this CliParameter parameter)
+  {
+    return parameter is CliFlag {Name: BuiltInFlags.HelpName} flag && flag.HasValue();
+  }
+
   private static bool IsShortName(string arg)
   {
     return arg.Length == 2 && arg[0] == CliParameter.ShortNamePrefix[0];

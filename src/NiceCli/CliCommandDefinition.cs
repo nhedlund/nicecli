@@ -30,6 +30,10 @@ public class CliCommandDefinition : CliParameter
   internal IEnumerable<CliParameter> RequiredParameters => Parameters.Where(parameter => parameter.Optionality == CliOptionality.Mandatory);
   internal IEnumerable<CliOption> Options => Parameters.OfType<CliOption>();
   internal IEnumerable<CliFlag> Flags => Parameters.OfType<CliFlag>();
+  internal IEnumerable<CliPositionalParameter> PositionalParameters => Parameters.OfType<CliPositionalParameter>();
+  internal IEnumerable<CliPositionalParameter> PositionalRequiredParameters => Parameters.OfType<CliPositionalParameter>().Where(parameter => parameter.Optionality == CliOptionality.Mandatory);
+  internal IEnumerable<CliPositionalParameter> PositionalNonRequiredParameters => Parameters.OfType<CliPositionalParameter>().Where(parameter => parameter.Optionality == CliOptionality.Optional);
+  internal IEnumerable<CliParameter> NonPositionalParameters => Parameters.Where(parameter => parameter is not CliPositionalParameter);
 
   protected override Action<object, string>? ParseParameter => null;
   protected override Action<object, string>? ParseParameterValue => null;

@@ -60,6 +60,7 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
   {
     WriteDescription(commandDefinition.Description);
     WriteCommandUsage(commandDefinition);
+    WritePositionalParameters(commandDefinition.PositionalParameters);
     WriteOptions(commandDefinition.Options);
     WriteFlags(commandDefinition.Flags);
     WriteExamples(commandDefinition.Examples);
@@ -82,8 +83,12 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
 
   private void WriteCommandUsage(CliCommandDefinition commandDefinition)
   {
-    var optionalArgs = commandDefinition.Parameters.Any() ? " [args]" : "";
-    WriteSection("Usage", $"{_appDefinition.Name} {commandDefinition.CommandMatchingName}{optionalArgs}");
+    var positionalRequiredArgs = string.Join(" ", commandDefinition.PositionalRequiredParameters.Select(parameter => $"<{parameter.Name.PascalToKebabCase()}>"));
+    var positionalNonRequiredArgs = string.Join(" ", commandDefinition.PositionalNonRequiredParameters.Select(parameter => $"[{parameter.Name.PascalToKebabCase()}]"));
+    var nonPositionalArgs = commandDefinition.NonPositionalParameters.Any() ? "[args]" : "";
+    var commandAndArgs = string.Join(" ", new [] {commandDefinition.CommandMatchingName, positionalRequiredArgs, positionalNonRequiredArgs, nonPositionalArgs}.Where(s => s != ""));
+
+    WriteSection("Usage", $"{_appDefinition.Name} {commandAndArgs}");
   }
 
   private void WriteDefaultCommand()
@@ -100,6 +105,11 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
       command.Visibility == CliVisibility.Visible).ToList();
 
     WriteSection(_hasHiddenCommands ? "Common Commands" : "Commands", commands.Select(GetParameterDescription).ToArray());
+  }
+
+  private void WritePositionalParameters(IEnumerable<CliPositionalParameter> positionalParameters)
+  {
+    WriteSection("Positional Parameters", positionalParameters.Select(GetParameterDescription).ToArray());
   }
 
   private void WriteOptions(IEnumerable<CliOption> options)
@@ -126,8 +136,7 @@ internal class CliHelpCommand : ICliHelpCommand, ICliBuiltInCommand
 
   private string GetParameterDescription(CliParameter parameter)
   {
-    var names = string.Join(ParameterNameSeparator, parameter.MatchingNames);
-    var namesWithOptionalValue = parameter is CliOption option ? $"{names} {option.Parameter}" : names;
+    var namesWithOptionalValue = parameter is CliOption option ? $"{parameter.ParameterNames} {option.Parameter}" : parameter.ParameterNames;
     var namesTotalWidth = _maxParameterWidth + MinimumColumnMargin;
 
     return $"{namesWithOptionalValue.PadRight(namesTotalWidth)}{parameter.Description}";
