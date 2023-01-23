@@ -76,7 +76,7 @@ public static class CliAppExtensions
     string description,
     Action<CliCommandDefinition<TCommand>>? configureCommand = null) where TCommand : ICliCommand
   {
-    return app.Command<TCommand>(description, CliDefault.No, CliVisibility.Visible, configureCommand);
+    return app.Command(description, CliDefault.No, CliVisibility.Visible, configureCommand);
   }
 
   public static CliApp HiddenCommand<TCommand>(
@@ -84,7 +84,7 @@ public static class CliAppExtensions
     string description,
     Action<CliCommandDefinition<TCommand>>? configureCommand = null) where TCommand : ICliCommand
   {
-    return app.Command<TCommand>(description, CliDefault.No, CliVisibility.Hidden, configureCommand);
+    return app.Command(description, CliDefault.No, CliVisibility.Hidden, configureCommand);
   }
 
   public static CliApp DefaultCommand<TCommand>(
@@ -92,7 +92,7 @@ public static class CliAppExtensions
     string description,
     Action<CliCommandDefinition<TCommand>>? configureCommand = null) where TCommand : ICliCommand
   {
-    return app.Command<TCommand>(description, CliDefault.Yes, CliVisibility.Visible, configureCommand);
+    return app.Command(description, CliDefault.Yes, CliVisibility.Visible, configureCommand);
   }
 
   private static CliApp Command<TCommand>(

@@ -18,11 +18,6 @@ internal static class CliParameterExtensions
     return parameter is CliFlag {Name: BuiltInFlags.HelpName} flag && flag.HasValue();
   }
 
-  private static bool IsShortName(string arg)
-  {
-    return arg.Length == 2 && arg[0] == CliParameter.ShortNamePrefix[0];
-  }
-
   internal static int GetMaxWidth(this IEnumerable<CliParameter> parameters)
   {
     var maxWidth = 0;
@@ -36,5 +31,10 @@ internal static class CliParameterExtensions
     }
 
     return maxWidth;
+  }
+
+  private static bool IsShortName(string arg)
+  {
+    return arg.Length == 2 && arg[0] == CliParameter.ShortNamePrefix[0];
   }
 }
