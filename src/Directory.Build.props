@@ -7,6 +7,7 @@
     <Deterministic>true</Deterministic>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysisMode>Recommended</AnalysisMode>
+    <PackageTags>cli;commandline;command line;argument;parser</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
