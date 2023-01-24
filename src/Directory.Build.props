@@ -7,7 +7,15 @@
     <Deterministic>true</Deterministic>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysisMode>Recommended</AnalysisMode>
-    <PackageTags>cli;commandline;command line;argument;parser</PackageTags>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <Authors>Niklas Hedlund</Authors>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/nhedlund/nicecli</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/nhedlund/nicecli</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>cli;commandline;command line;argument;parameter;option;parser</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
