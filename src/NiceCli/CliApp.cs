@@ -54,6 +54,12 @@ public class CliApp
     return Definition.GetGlobalParameterValues();
   }
 
+  public object GetGlobalOptions()
+  {
+    Parse();
+    return Definition.Options.GlobalOptions;
+  }
+
   public async Task<int> RunAsync()
   {
     try
