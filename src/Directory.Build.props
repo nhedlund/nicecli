@@ -16,6 +16,9 @@
     <PackageProjectUrl>https://github.com/nhedlund/nicecli</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>cli;commandline;command line;argument;parameter;option;parser</PackageTags>
+    <Product>NiceCli</Product>
+    <Copyright>Copyright © Niklas Hedlund 2023</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
+    <Title>NiceCli</Title>
+    <Description>CLI framework to parse arguments into options and commands.</Description>
   </PropertyGroup>
 
 </Project>

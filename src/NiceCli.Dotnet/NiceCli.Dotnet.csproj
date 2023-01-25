@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <Title>NiceCli .NET host extensions</Title>
+    <Description>NiceCli extensions to .NET host and host builder.</Description>
   </PropertyGroup>
 
   <ItemGroup>
