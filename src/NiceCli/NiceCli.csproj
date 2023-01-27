@@ -7,4 +7,7 @@
     <Description>CLI framework to parse arguments into options and commands.</Description>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
 </Project>
