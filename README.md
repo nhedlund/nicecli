@@ -52,11 +52,11 @@ return await CliApp.WithArgs(args)
 
 Help output for the above code when running: `example -h`
 
-<img alt="Commands options and flags example" width="827px" src="docs/images/commands-options-flags.png" />
+<img alt="Commands options and flags example" width="827px" src="https://raw.githubusercontent.com/nhedlund/nicecli/main/docs/images/commands-options-flags.png" />
 
 And help output for the command migrate: `example migrate -h`
 
-<img alt="Migrate command help" width="827px" src="docs/images/commands-options-flags-migrate.png" />
+<img alt="Migrate command help" width="827px" src="https://raw.githubusercontent.com/nhedlund/nicecli/main/docs/images/commands-options-flags-migrate.png" />
 
 ### Descriptive definitions
 
@@ -80,7 +80,7 @@ return await CliApp.WithArgs(args)
 
 Help output for the above code when running: `example -h`
 
-<img alt="Descriptive parameters example" width="827px" src="docs/images/cli-description.png" />
+<img alt="Descriptive parameters example" width="827px" src="https://raw.githubusercontent.com/nhedlund/nicecli/main/docs/images/cli-description.png" />
 
 ### Positional parameters
 
@@ -101,11 +101,11 @@ return await CliApp.WithArgs(args)
 
 Help output for the above code when running: `example -h`
 
-<img alt="Positional parameters example" width="827px" src="docs/images/command-positional-parameters.png" />
+<img alt="Positional parameters example" width="827px" src="https://raw.githubusercontent.com/nhedlund/nicecli/main/docs/images/command-positional-parameters.png" />
 
 And help output for the command generate: `example generate -h`
 
-<img alt="Generate command help" width="827px" src="docs/images/command-positional-parameters-generate.png" />
+<img alt="Generate command help" width="827px" src="https://raw.githubusercontent.com/nhedlund/nicecli/main/docs/images/command-positional-parameters-generate.png" />
 
 ### Dotnet host framework integration
 
@@ -131,4 +131,4 @@ return await host.RunCliCommandAsync(cliApp);
 
 Help output for the above code when running: `example -h`
 
-<img alt="Dotnet run host help" width="827px" src="docs/images/dotnet-run-host.png" />
+<img alt="Dotnet run host help" width="827px" src="https://raw.githubusercontent.com/nhedlund/nicecli/main/docs/images/dotnet-run-host.png" />
