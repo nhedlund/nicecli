@@ -5,6 +5,7 @@
     <LangVersion>10.0</LangVersion>
     <Title>NiceCli</Title>
     <Description>CLI framework to parse arguments into options and commands.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
