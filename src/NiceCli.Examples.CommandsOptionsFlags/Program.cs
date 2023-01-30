@@ -10,7 +10,7 @@ return await CliApp.WithArgs(args)
     .Option(o => o.Db, "Database connection string")
     .Option(o => o.CommandTimeout, "Database command timeout", "mm:ss", CliValueConversion.MinutesAndSecondsToTimeSpan)
     .Flag(f => f.Verbose, "Verbose logging")
-    .Configure(InitializeLogging))
+    .Configure(o => InitializeLogging(o)))
   .DefaultCommand<RunCommand>("Run service")
   .Command<MigrateCommand>("Migrate database to current version", c => c
     .Flag(f => f.DryRun, "Show migration SQL commands, but do not run them"))
