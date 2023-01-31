@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+
+rm -rf packages
+dotnet pack -c Release -o packages -v normal src/NiceCli.sln
