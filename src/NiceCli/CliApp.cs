@@ -38,6 +38,7 @@ public class CliApp
 
   public CliApp AddServiceProvider(IServiceProvider serviceProvider)
   {
+    Container.AddSingleton(typeof(IServiceProvider), serviceProvider);
     Container.AddExternalServiceProvider(serviceProvider);
     return this;
   }
