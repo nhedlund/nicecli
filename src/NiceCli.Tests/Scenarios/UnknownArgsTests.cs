@@ -23,13 +23,13 @@ public class UnknownArgsTests
   [TestCase("--unknown")]
   [TestCase("unknown")]
   [TestCase("unknown yes")]
-  public async Task UnknownArgsAndNoCommand_Parse_DelaysExceptionAndRunReturns1(string args)
+  public async Task UnknownArgsAndNoCommand_Parse_SucceedsAndRunReturns0(string args)
   {
     var app = CliApp.WithArgs(args.Split(' '));
 
-    Should.Throw<CliUserException>(() => app.Parse());
+    app.Parse();
 
-    (await app.RunAsync()).ShouldBe(1);
+    (await app.RunAsync()).ShouldBe(0);
   }
 
   [Test]
@@ -40,10 +40,11 @@ public class UnknownArgsTests
   [TestCase("--unknown")]
   [TestCase("unknown")]
   [TestCase("unknown yes")]
-  public async Task UnknownArgsAndNonDefaultCommand_Parse_DelaysExceptionAndRunReturns1(string args)
+  public async Task UnknownArgsAndNoCommandAndThrowOnUnmappedParameters_Parse_ThrowsAndRunReturns1(string args)
   {
-    var app = CliApp.WithArgs(args.Split(' '))
-      .Command<MyOtherCommand>("Does some stuff");
+    var app = CliApp
+      .WithArgs(args.Split(' '))
+      .ThrowOnUnmappedParameters();
 
     Should.Throw<CliUserException>(() => app.Parse());
 
@@ -58,29 +59,50 @@ public class UnknownArgsTests
   [TestCase("--unknown")]
   [TestCase("unknown")]
   [TestCase("unknown yes")]
-  public async Task UnknownArgsAndDefaultCommand_Parse_DelaysExceptionAndRunReturns1(string args)
-  {
-    var app = CliApp.WithArgs(args.Split(' '))
-      .DefaultCommand<MyDefaultRunCommand>("Runs the service");
-
-    Should.Throw<CliUserException>(() => app.Parse());
-
-    (await app.RunAsync()).ShouldBe(1);
-  }
-
-  [Test]
-  [TestCase("-")]
-  [TestCase("-u")]
-  [TestCase("-u -a")]
-  [TestCase("--")]
-  [TestCase("--unknown")]
-  [TestCase("unknown")]
-  [TestCase("unknown yes")]
-  public async Task UnknownArgsAndTwoCommandsWhereOneIsDefaultCommand_Parse_DelaysExceptionAndRunReturns1(string args)
+  public async Task UnknownArgsAndNonDefaultCommandAndThrowOnUnmappedParameters_Parse_DelaysExceptionAndRunReturns1(string args)
   {
     var app = CliApp.WithArgs(args.Split(' '))
       .Command<MyOtherCommand>("Does some stuff")
-      .DefaultCommand<MyDefaultRunCommand>("Runs the service");
+      .ThrowOnUnmappedParameters();
+
+    Should.Throw<CliUserException>(() => app.Parse());
+
+    (await app.RunAsync()).ShouldBe(1);
+  }
+
+  [Test]
+  [TestCase("-")]
+  [TestCase("-u")]
+  [TestCase("-u -a")]
+  [TestCase("--")]
+  [TestCase("--unknown")]
+  [TestCase("unknown")]
+  [TestCase("unknown yes")]
+  public async Task UnknownArgsAndDefaultCommandAndThrowOnUnmappedParameters_Parse_DelaysExceptionAndRunReturns1(string args)
+  {
+    var app = CliApp.WithArgs(args.Split(' '))
+      .DefaultCommand<MyDefaultRunCommand>("Runs the service")
+      .ThrowOnUnmappedParameters();
+
+    Should.Throw<CliUserException>(() => app.Parse());
+
+    (await app.RunAsync()).ShouldBe(1);
+  }
+
+  [Test]
+  [TestCase("-")]
+  [TestCase("-u")]
+  [TestCase("-u -a")]
+  [TestCase("--")]
+  [TestCase("--unknown")]
+  [TestCase("unknown")]
+  [TestCase("unknown yes")]
+  public async Task UnknownArgsAndTwoCommandsWhereOneIsDefaultCommandAndThrowOnUnmappedParameters_Parse_DelaysExceptionAndRunReturns1(string args)
+  {
+    var app = CliApp.WithArgs(args.Split(' '))
+      .Command<MyOtherCommand>("Does some stuff")
+      .DefaultCommand<MyDefaultRunCommand>("Runs the service")
+      .ThrowOnUnmappedParameters();
 
     Should.Throw<CliUserException>(() => app.Parse());
 

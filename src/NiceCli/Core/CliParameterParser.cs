@@ -12,7 +12,8 @@ internal static class CliParameterParser
   public static CliCommandDefinition? ParseParameters(
     IEnumerable<string> args,
     IReadOnlyList<CliParameter> globalParameters,
-    IEnumerable<CliCommandDefinition> commands)
+    IEnumerable<CliCommandDefinition> commands,
+    CliValidationMode validationMode)
   {
     var unprocessedArgs = args.ToList();
 
@@ -21,9 +22,11 @@ internal static class CliParameterParser
     var selectedCommand = ParseOptionalSelectedCommand(commands, unprocessedArgs);
 
     if (selectedCommand != null)
-      ParseCommandParameters(selectedCommand, isHelpRequested);
+      ParseCommandParameters(selectedCommand, isHelpRequested, validationMode);
 
-    EnsureNoUnprocessedArgsRemain(unprocessedArgs);
+    if (validationMode == CliValidationMode.ThrowOnUnmappedParameters)
+      EnsureNoUnprocessedArgsRemain(unprocessedArgs);
+
     return selectedCommand;
   }
 
@@ -63,7 +66,7 @@ internal static class CliParameterParser
     return null;
   }
 
-  private static void ParseCommandParameters(CliCommandDefinition command, bool isHelpRequested)
+  private static void ParseCommandParameters(CliCommandDefinition command, bool isHelpRequested, CliValidationMode validationMode)
   {
     var argsCount = command.CommandArgs.Count;
     var requiredParameterCount = command.RequiredParameters.Sum(parameter => parameter.ParameterArgumentCount);
@@ -74,7 +77,7 @@ internal static class CliParameterParser
     var argsToPreValidate = command.CommandArgs.ToList();
     ParseParameters(argsToPreValidate, command.Parameters);
 
-    if (argsToPreValidate.Any())
+    if (validationMode == CliValidationMode.ThrowOnUnmappedParameters && argsToPreValidate.Any())
       throw new CliUserException($"Command {command.CommandName} got unknown parameters: {string.Join(", ", argsToPreValidate)}");
   }
 

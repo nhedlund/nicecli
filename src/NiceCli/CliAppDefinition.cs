@@ -17,6 +17,7 @@ public class CliAppDefinition
 
   internal CliCommands Commands { get; } = new();
   internal CliGlobalOptions Options { get; set; } = CliGlobalOptions.Create<object>();
+  internal CliValidationMode ValidationMode { get; set; } = CliValidationMode.IgnoreUnmappedParameters;
 
   public CliSelectedCommand Parse(params string[] args)
   {
@@ -26,7 +27,7 @@ public class CliAppDefinition
     Commands.AddDefaultCommandsIfNotDefined();
     Options.AddMissingGlobalFlags();
     CliParameterValidator.ValidateDefinition(Options.Parameters, Commands);
-    var selectedFromArgs = CliParameterParser.ParseParameters(args, Options.Parameters, Commands);
+    var selectedFromArgs = CliParameterParser.ParseParameters(args, Options.Parameters, Commands, ValidationMode);
     _selectedCommand = new CliSelectedCommand(Options, Commands, selectedFromArgs);
     Options.AddFallbackProvidersGlobalParameterValues();
     Options.BindGlobalOptionValues();

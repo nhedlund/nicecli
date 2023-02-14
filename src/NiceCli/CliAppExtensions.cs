@@ -118,4 +118,10 @@ public static class CliAppExtensions
     app.Definition.Options.AddGlobalParameterValueProvider(globalParameterValueProvider);
     return app;
   }
+
+  public static CliApp ThrowOnUnmappedParameters(this CliApp app)
+  {
+    app.Definition.ValidationMode = CliValidationMode.ThrowOnUnmappedParameters;
+    return app;
+  }
 }
