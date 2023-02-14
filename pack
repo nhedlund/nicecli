@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+source build
 rm -rf packages
-dotnet pack -c Release -o packages -v normal src/NiceCli.sln
+dotnet pack -c Release -o packages -v normal --no-build src/NiceCli.sln
 mkdir -p ~/.nuget/local
 cp -f packages/* ~/.nuget/local
