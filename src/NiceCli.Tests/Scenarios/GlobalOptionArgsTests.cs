@@ -56,7 +56,7 @@ public class GlobalOptionArgsTests
       .DefaultCommand<MyDefaultRunCommand>("Runs the service")
       .Command<MyGlobalOptionsCommand>("Tests global options constructor dependency")
       .GlobalOptions<MyGlobalOptions>(c => c
-        .Option(o => o.Number, "App number example", "value", 'n'));
+        .Option(o => o.Number, "App number example", 'n'));
   }
 
   private static CliApp CreateCliAppWithConfigure(Action<MyGlobalOptions> configure, params string[] args)
