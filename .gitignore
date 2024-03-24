@@ -7,6 +7,7 @@ packages
 *.trx
 *.DotSettings.user
 
+.vs
 .idea
 .DS_Store
 coverage.json
